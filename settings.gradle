@@ -1,0 +1,85 @@
+rootProject.name = "PluginDemo"
+include ':app'
+include ':zyhsimple'
+def startTime = System.currentTimeMillis()
+gradle.addBuildListener(new BuildListener() {
+    @Override
+    void buildStarted(Gradle gradle) {
+        println '-setting-------->  buildStarted'
+        startTime = System.currentTimeMillis()
+        println "---->  开始构建： time $startTime"
+    }
+
+    @Override
+    void settingsEvaluated(Settings settings) {
+        println '-setting-------->  settingsEvaluated setting中代码执行完成， 但project还没生成'
+        if(startTime == 0){
+            startTime = System.currentTimeMillis()
+        }
+        println  "------>  setting evaluteated time: ${(System.currentTimeMillis() - startTime)}"
+    }
+
+    @Override
+    void projectsLoaded(Gradle gradle) {
+        println '-setting-------->  projectsLoaded 初始化结束，完成project，初始化'
+        println "-------------> 初始时长： ${(System.currentTimeMillis() - startTime)} "
+    }
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+        println '-setting-------->  projects evaluated ， 配置结束'
+        println "-------------> 配置时长： ${(System.currentTimeMillis() - startTime)} "
+
+
+    }
+
+    @Override
+    void buildFinished(BuildResult buildResult) {
+        println '-setting-------->  buildFinished 构建结束'
+        println "-------------> 执行时长： ${(System.currentTimeMillis() - startTime)}"
+
+    }
+})
+def beginTime = System.currentTimeMillis()
+def  configed = false
+def beginCfgTime
+def beginOfProjectConfig = new HashMap() // store project
+
+gradle.projectsLoaded {
+    println "初始阶段： ${System.currentTimeMillis() - beginTime}"
+}
+def curTime() {
+     System.currentTimeMillis()
+ }
+gradle.beforeProject { project ->
+    if(!configed){
+        configed = true
+        beginCfgTime = curTime()
+    }
+    beginOfProjectConfig[project] = curTime()
+}
+
+def beginOfProjectExcute
+gradle.taskGraph.whenReady {
+    println "配置阶段，总共耗时：' + ${(curTime() - beginCfgTime)} "
+    beginOfProjectExcute = curTime()
+}
+
+gradle.afterProject { pro ->
+    def cusT = curTime() - beginOfProjectConfig[pro]
+    println "配置阶段 : $pro 耗时: $cusT"
+}
+gradle.taskGraph.beforeTask {
+    task ->
+        task.doFirst {
+            task.ext.beginTime = curTime()
+        }
+        task.doLast {
+          println "执行阶段 ： #$task 耗时： ${curTime() - task.beginTime}"
+        }
+}
+
+
+gradle.buildFinished {
+//    println "执行阶段，耗时： + ${curTime() - beginOfProjectExcute } "
+}

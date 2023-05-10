@@ -1,0 +1,87 @@
+
+//groovy
+
+interface  GreetingPluginExtension {
+    Property<String> getMessage()
+    Property<String> getGreeter()
+}
+
+class GreetingPlugin implements Plugin<Project>{
+
+    @Override
+    void apply(Project pject) {
+        println '---------------> greeting plugin apply() exceuted '
+        def extension = pject.extensions.create('greeting',GreetingPluginExtension)
+        extension.message.convention('hello from greetingPlgin')
+        pject.task("hha"){
+            doLast {
+                println "----------->applay()   task($name)  ,   ${this}  "
+                println "-------hi bitch----> ${extension.message.get()}"
+            }
+        }
+    }
+}
+
+
+
+apply plugin: GreetingPlugin
+greeting {
+    message = 'hi '
+    greeter = 'Gradle: are you ok '
+}
+
+abstract class GreetingToFileTask extends DefaultTask {
+    @OutputFile
+    abstract RegularFileProperty getDestination()
+    @TaskAction
+    def greet(){
+        println '--------->>> greet()   greetingToFileTask # task'
+        def file = getDestination().get().asFile
+        file.parentFile.mkdirs()
+        file.write("hello greeting file task")
+    }
+}
+def greetingFile = objects.fileProperty()
+
+tasks.register('greet',GreetingToFileTask){
+    destination = greetingFile
+    println "-destination-->> ${destination.get().asFile.path}"
+}
+
+tasks.register('sayGreeting'){
+    dependsOn greet//执行 sayGReeting时，先执行 greet task
+    doLast {
+        def file = greetingFile.get().asFile
+        println "content::  ${file.text} (file: ${file.name})"
+    }
+}
+greetingFile.set(layout.buildDirectory.file('hello.txt'))
+task taskA {
+    println '---------> taskA executed'
+    doFirst {
+        println '---------> taskA  do first-------'
+    }
+    doLast {
+        println '--------->taskA do last'
+    }
+}
+
+// copy文件
+task copyFileDemo(type:Copy){
+    def sourcePath = "$projectDir.path/app/build/outputs/apk/debug"
+    def tarPath = "$projectDir.path/app/build/outputs/logs"
+//    println "sourcePath $sourcePath"
+//    println "tarPath $tarPath"
+    include "*.apk"
+    from sourcePath
+    into tarPath
+    println 'success'
+}
+task deleteF(type: Delete){
+    println "--delete f-->  $project.buildDir"
+//    def sourcePath = "$project.buildDir/outputs/apk/debug/app-debug.apk"
+//    delete sourcePath
+//    println 'delete success'
+}
+
+

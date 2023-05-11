@@ -9,5 +9,7 @@ class SimplePlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         println "------===================---->  simplePlugin apply $project"
+//        project.extensions.android
+//        android.registerTransform(new SimpleTransform(project))
     }
 }

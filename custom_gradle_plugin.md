@@ -1,5 +1,11 @@
 ### 自定义Gradle插件
 
+> 实践过程基于gradle 6.5 ,  android.tools.build:gradle:4.1.3
+
+ https://juejin.cn/post/7098383560746696718
+
+​	https://docs.gradle.org/current/userguide/userguide.html
+
 tip: 之前了解过自定义插件，开发中用的比较少，基本上忘记了，
 
 由于工作转到了自动化测试相关，自动化测试框架使用gradle和自定义插件的技术点比较多，所以重新学习补充gradle相关知识。
@@ -40,11 +46,168 @@ tip: 之前了解过自定义插件，开发中用的比较少，基本上忘记
 
    先执行根目录下的 build.gradle ,顺序执行子模块的build.gradle文件生成一个有向无环图
 
-3. execution 执行阶段 ，按照配置阶段生成的有向无环图顺序执行task
+3. execution 执行阶段 ，按照配置阶段生成的有向无环图顺序执行task	
 
-   
+##### 3 自动化发布
 
-​	
+本地仓库或者远程仓库或者私服
+
+[参考](https://juejin.cn/post/6963633839860088846)
+
+###### 前言
+
+######  什么是 POM？
+
+POM（Project Object Model）指项目对象模型，用于描述项目构件的基本信息。一个有效的 POM 节点中主要包含一下信息：
+
+| 配置                    | 描述              | 举例（'com.github.bumptech.glide:glide:4.11.0'） |
+| ----------------------- | ----------------- | ------------------------------------------------ |
+| groupId                 | 组织 / 公司的名称 | com.github.bumptech.glide                        |
+| artifactId([ˈɑːtɪfækt]) | 组件的名称        | glide                                            |
+| version                 | 组件的版本        | 4.11.0                                           |
+| packaging               | 打包的格式        | aar                                              |
+
+######   什么是仓库（repository）？
+
+在项目中，我们会需要依赖各种各样的二方库或三方库，这些依赖一定会存放在某个位置（Place），这个 “位置” 就叫做仓库。使用仓库可以帮助我们管理项目构件，例如 jar、aar 等等
+
+**主流的构建工具都有三个层次的仓库概念：**
+
+- **1、本地仓库：** 无论使用 Linux 还是 Window，计算机中会有一个目录用来存放从中央仓库或远程仓库下载的依赖文件；
+- **2、中央仓库：** 开源社区提供的仓库，是绝大多数开源库的存放位置。比如 Maven 社区的中央仓库 [Maven Central](https://link.juejin.cn?target=https%3A%2F%2Fsearch.maven.org%2F)；
+- **3、私有仓库：** 公司或组织的自定义仓库，可以理解为二方库的存放位置。
+
+主要脚本
+
+```
+plugins {
+    id 'groovy' // Groovy Language
+    id 'maven'
+    id 'java-gradle-plugin'
+}
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+gradlePlugin {
+    plugins {
+        fkPu {
+            id  = 'com.zyh.simple'
+            implementationClass  = 'com.zyh.simple.SimplePlugin'
+
+        }
+    }
+}
+
+def NEXUS_REPOSITORY_URL="http://localhost:8081/nexus3/repository/maven-releases/"
+def NEXUS_USERNAME="admin"
+def NEXUS_PASSWORD="123456"
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = 'com.zyh.simple'
+            pom.artifactId = 'simplePlugin'
+            pom.version = '1.5.0'
+            //发布到本地仓库
+            repository(url: uri('../localMavenRepository'))
+            //github 
+            //或者nuxe私服
+            
+            //  repository(url: NEXUS_REPOSITORY_URL) {
+//                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+//            }
+        }
+    }
+}
+
+使用：：===============
+//根目录build.gradle
+ repositories {
+      
+        maven { url "localMavenRepository" }
+    }
+    dependencies {
+    	        classpath "com.zyh.simple:simplePlugin:1.5.0"
+    }
+    plugins {
+    	id 'com.zyh.simple'
+    }
+
+```
+
+###### 3.1 发布到github
+
+ 3.1.1  root build.gradle
+
+```
+buildscript {
+    repositories {
+       //other center
+       j
+       //github
+        maven { url 'https://jitpack.io' }
+//        maven { url "localMavenRepository" }
+    }
+
+dependencies {
+    ...
+    classpath "com.github.dcendents:android-maven-gradle-plugin:1.5" // // GitHub Maven 插件
+}
+```
+
+在发布的模块 build.gradle
+
+````
+plugins {
+    id 'groovy' // Groovy Language
+//    id 'maven'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+    id 'com.github.dcendents.android-maven'//github maven 插件
+}
+//apply plugin:"com.github.dcendents.android-maven"
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+gradlePlugin {
+    plugins {
+        fkPu {
+            id  = 'com.zyh.simple'
+            implementationClass  = 'com.zyh.simple.SimplePlugin'
+
+        }
+    }
+}
+
+group = 'com.github.PeanutZhang'
+
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            pom.groupId = 'com.zyh.simple'
+//            pom.artifactId = 'simplePlugin'
+//            pom.version = '1.5.0'
+//            repository(url: uri('../localMavenRepository'))
+//        }
+//    }
+//}
+
+````
+
+发布github
+
+1. 把项目就push上去
+2. 打一个tag  v1.0.0
+
+```
+
+```
+
+
 
 #### 3 自己实现的demo
 

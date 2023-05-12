@@ -5,13 +5,12 @@ plugins {
     id 'java-gradle-plugin'
 //    id 'com.github.dcendents.android-maven'//github maven 插件
 }
-//apply plugin:"com.github.dcendents.android-maven"
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "com.android.tools.build:gradle:4.0.1"
     implementation 'com.android.tools.build:transform-api:1.5.0'
-
+    implementation 'org.javassist:javassist:3.27.0-GA'
 
 }
 
@@ -33,7 +32,7 @@ uploadArchives {
         mavenDeployer {
             pom.groupId = 'com.zyh.simple'
             pom.artifactId = 'simplePlugin'
-            pom.version = '1.6.0'
+            pom.version = '1.7.0'
             repository(url: uri('../localMavenRepository'))
         }
     }

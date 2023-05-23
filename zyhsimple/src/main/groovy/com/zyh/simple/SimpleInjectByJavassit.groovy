@@ -6,9 +6,6 @@ import javassist.CtMethod
 import javassist.bytecode.AnnotationsAttribute
 import org.gradle.api.Project;
 
-/**
- * 借助 Javassit 操作 Class 文件
- */
 class SimpleInjectByJavassit {
 
     private static final ClassPool sClassPool = ClassPool.getDefault()

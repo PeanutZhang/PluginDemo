@@ -1,6 +1,14 @@
 apply plugin:'com.android.application'
-apply plugin: 'com.zyh.simple'
-apply from: '../taskDemo.gradle'
+if(useZyhsimple.toBoolean()){
+    apply plugin: 'com.zyh.simple'
+
+}else {
+    apply plugin: 'com.zyh.bsc'
+}
+
+//apply from: '../taskDemo.gradle'
+
+//代码覆盖配置
 android {
     compileSdkVersion 33
     buildToolsVersion "29.0.2"
@@ -34,6 +42,13 @@ android {
     }
 }
 
+task  testSimpleTask(type:SimpleTask){
+    println " ddddddddddddddddddddddddddddddddddddddd"
+}
+ afterEvaluate {
+     testSimpleTask.doCusSth()
+
+ }
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.0.0'

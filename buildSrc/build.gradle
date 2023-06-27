@@ -1,0 +1,48 @@
+plugins {
+    id 'groovy' // Groovy Language
+    id 'maven'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+//    id 'kotlin'
+//    id 'maven-pblish'
+    id 'java-gradle-plugin'
+//    id 'com.github.dcendents.android-maven'//github maven 插件
+}
+
+repositories {
+    maven {
+        url 'https://maven.aliyun.com/repository/public/'
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/google"
+    }
+    maven { url 'https://jitpack.io' }
+
+    maven {
+        url "../repo"
+    }
+    mavenLocal()
+    mavenCentral()
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10"
+    implementation gradleApi()//gradle sdk
+    implementation localGroovy()//groovy sdk
+    implementation 'com.android.tools.build:gradle:4.0.1'
+    implementation 'com.android.tools.build:transform-api:1.5.0'
+    implementation 'org.javassist:javassist:3.27.0-GA'
+    implementation group: 'org.ow2.asm', name: 'asm', version: '8.0.1'
+    implementation group: 'org.ow2.asm', name: 'asm-commons', version: '8.0.1'
+    implementation group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
+    implementation ('org.jacoco:org.jacoco.report:0.8.5'){
+        exclude group: 'org.jacoco', module: 'org.jacoco.core'
+    }
+//      implementation 'org.jacoco.core:jacoco-core:1.2.0'
+
+    
+    task custom {
+        println 'buildsrc gradle 中定义的task'
+    }
+}

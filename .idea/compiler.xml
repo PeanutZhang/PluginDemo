@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="PluginDemo.app" target="11" />
+      <module name="PluginDemo.buildSrc" target="11" />
+      <module name="PluginDemo.buildSrc.main" target="11" />
+      <module name="PluginDemo.buildSrc.test" target="11" />
+      <module name="PluginDemo.rt" target="11" />
+      <module name="PluginDemo.zyhsimple" target="11" />
+      <module name="PluginDemo.zyhsimple.main" target="11" />
+      <module name="PluginDemo.zyhsimple.test" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

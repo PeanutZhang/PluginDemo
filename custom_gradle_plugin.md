@@ -249,9 +249,9 @@ publishing {
 
 
 
+#### 5 gradle常用命令
 
-
-
+1. gradle :模块名：tasks --all //列出指定模块所有task
 
 
 

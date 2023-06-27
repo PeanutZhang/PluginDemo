@@ -67,7 +67,7 @@ class ToastfTransform extends Transform {
     void transform(Context context, Collection<TransformInput> inputs,
                    Collection<TransformInput> referencedInputs, TransformOutputProvider outputProvider,
                    boolean isIncremental) throws IOException, TransformException, InterruptedException {
-        println '--------------------transform 开始-------------------'
+        println '----------simple----------transform 开始-------------------'
 
         // Transform的inputs有两种类型，一种是目录，一种是jar包，要分开遍历
         inputs.each {
@@ -82,7 +82,7 @@ class ToastfTransform extends Transform {
                         // 获取输出目录
                         def dest = outputProvider.getContentLocation(directoryInput.name,
                                 directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
-
+// /home/zyh/XM/as_space/auto_test/PluginDemo/app/build/intermediates/transforms/InjectTransform/debug/33
                         println("---------------------->  directory output dest: $dest.absolutePath")
                         // 将input的目录复制到output指定目录
                         FileUtils.copyDirectory(directoryInput.file, dest)

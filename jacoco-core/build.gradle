@@ -1,8 +1,13 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'maven'
-group='com.github.ttpai'
 
+if(!pubLocal.toBoolean()){
+    ext.GROUP="com.jf.andcoverage"
+    ext.POM_ARTIFACT_ID = "jacoco-core"
+    ext.VERSION_NAME = "1.4.0"
+    apply from: '../up_load.gradle'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -15,3 +20,16 @@ dependencies {
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+if(pubLocal.toBoolean()){
+    println "jacoco-core bendi--------------"
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                pom.groupId = 'com.jf.andcoverage'
+                pom.artifactId = 'jacoco-core'
+                pom.version = '1.3.0'
+                repository(url: uri('../repo'))
+            }
+        }
+    }
+}

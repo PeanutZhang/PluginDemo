@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+ext.GROUP="com.jf.andcoverage"
+ext.POM_ARTIFACT_ID = "rt-no-op"
+ext.VERSION_NAME = "1.4.0"
+apply from: '../up_load.gradle'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "30.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 29
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+}

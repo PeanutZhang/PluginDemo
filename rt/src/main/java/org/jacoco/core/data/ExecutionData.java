@@ -10,7 +10,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
-package com.zyh.simple.jacococore.data;
+package org.jacoco.core.data;
 
 import java.util.Arrays;
 

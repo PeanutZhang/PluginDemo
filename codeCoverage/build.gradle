@@ -1,0 +1,78 @@
+
+plugins {
+    id 'groovy' // Groovy Language
+    id 'maven'
+    id 'kotlin'
+    id 'java-gradle-plugin'
+
+//    id 'maven-pblish'
+//    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+//    id 'com.github.dcendents.android-maven'//github maven 插件
+}
+
+if(!pubLocal.toBoolean()){
+    ext.GROUP="com.jf.andcoverage"
+    ext.POM_ARTIFACT_ID = "codecoverage"
+    ext.VERSION_NAME = "2.0.0"
+    apply from: '../up_load.gradle'
+}
+
+repositories {
+    maven {
+        url 'https://maven.aliyun.com/repository/public/'
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/google"
+    }
+    maven { url 'http://10.10.22.89:8086/repository/maven-releases/'}
+    maven {
+        url "../repo"
+    }
+    maven { url 'https://jitpack.io' }
+    mavenLocal()
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10"
+    implementation gradleApi()//gradle sdk
+    implementation localGroovy()//groovy sdk
+    implementation 'com.android.tools.build:gradle:4.0.1'
+    implementation 'com.android.tools.build:transform-api:1.5.0'
+    implementation group: 'org.ow2.asm', name: 'asm', version: '8.0.1'
+    implementation group: 'org.ow2.asm', name: 'asm-commons', version: '8.0.1'
+    implementation group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
+    implementation('org.jacoco:org.jacoco.report:0.8.5') {
+        exclude group: 'org.jacoco', module: 'org.jacoco.core'
+    }
+    implementation('com.jf.andcoverage:jacoco-core:1.4.0')
+//         implementation('com.jf.andcoverage:jacoco-corre:1.2.0')
+
+    gradlePlugin {
+        plugins {
+            fkPlguin {
+                id = 'com.jf.codecoverage'
+                implementationClass = 'com.jf.codecoverage.ClassInjectPlugin'
+            }
+        }
+    }
+
+    if (pubLocal.toBoolean()) {
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    pom.groupId = 'com.zyh.simple'
+                    pom.artifactId = 'simplePlugin'
+                    pom.version = '1.9.0'
+                    repository(url: uri('../repo'))
+                }
+            }
+        }
+    }
+}

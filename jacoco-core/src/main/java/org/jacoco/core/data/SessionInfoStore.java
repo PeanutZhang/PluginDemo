@@ -89,7 +89,7 @@ public class SessionInfoStore implements ISessionInfoVisitor {
 
 	// === ISessionInfoVisitor ===
 
-	public void visitSessionInfo(final SessionInfo info) {
+		public void visitSessionInfo(final SessionInfo info) {
 		infos.add(info);
 	}
 

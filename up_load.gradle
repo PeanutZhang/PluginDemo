@@ -1,0 +1,18 @@
+apply plugin: 'maven'
+
+def REPOSITORY_URL = "http://10.10.22.34:8081/repository/maven-releases/"
+def NEXUS_USERNAME = "admin"
+def NEXUS_PASSWORD = "zyh0511"
+println ">>>>>>>> ARTIFACTiD: $POM_ARTIFACT_ID version $VERSION_NAME"
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = GROUP
+            pom.artifactId = POM_ARTIFACT_ID
+            pom.version = VERSION_NAME
+            repository(url: REPOSITORY_URL) {
+                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+            }
+        }
+    }
+}

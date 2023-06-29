@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
-import com.zyh.simple.jacococore.runtime.RuntimeData;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * Output that does nothing.

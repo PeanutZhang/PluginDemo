@@ -103,7 +103,7 @@ public class DiffClassVisitor extends ClassVisitor {
             @Override
             public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
                 builder.append(typeRef);
-                builder.append(typePath.toString());
+                builder.append(typePath !=null ? typePath.toString():"");
                 builder.append(desc);
                 builder.append(visible);
 //                System.out.println("visitTypeAnnotation--typeRef:" + typeRef + "  TypePath:" + typePath.toString() + "  desc:" + desc + "  visible" + visible);

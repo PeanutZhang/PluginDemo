@@ -3,6 +3,7 @@ package org.jacoco.agent.rt;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.Closeable;
@@ -22,16 +23,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.internal.Util;
 
-/**
- * FileName: CodeCoverageManager
- * Author: zhihao.wu@ttpai.cn
- * Date: 2020/9/16
- * Description: 代码覆盖工具 jacoco，运行时
- */
 public class CodeCoverageManager {
     private static CodeCoverageManager sInstance=new CodeCoverageManager();
-    private static String URL_HOST = "http://10.10.17.105:8080";//内网 服务器地址
 
     private static String APP_NAME;
     private static int versionCode;
@@ -41,20 +36,36 @@ public class CodeCoverageManager {
 
     private static final String TAG = "CodeCoverageManager";
 
+    private int min1 = 1000 * 60 *1;
+    private int min3 = 1000 * 60 *3;
+    private int min5 = 1000 * 60 * 5;
+    private int min10 = 1000 * 60 * 10;
+    private int periodInterval = min1;
+    private long lastGenTime;
+    public void setPeriodInterval(int period){
+         periodInterval = Math.max(min1,period);
+         periodInterval = Math.min(min10,periodInterval);
+    }
 
-    public static void init(Context context,String serverHost){
-       String path=context.getFilesDir().getAbsolutePath();
+
+    public static void init(Context context){
+        String path = "";
+        try{
+            path = context.getExternalCacheDir().getParent();
+        }catch (Exception e){
+        }
+      if(TextUtils.isEmpty(path)){
+          path=context.getFilesDir().getAbsolutePath();
+      }
         APP_NAME=context.getPackageName().replace(".","");
         versionCode=getVersion(context);
-        if(serverHost!=null)
-            URL_HOST=serverHost;
-
-        dirPath = path + "/jacoco/" + versionCode + "/";
+        dirPath = path + File.separator+"jacoco"+File.separator + versionCode + File.separator;
         File dir = new File(dirPath);
+        Log.e("zyhcoverage"," ec dirPath- "+dirPath);
         if (!dir.exists()) dir.mkdirs();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Date curDate = new Date(System.currentTimeMillis());
-        filePath = dirPath + UUID.randomUUID().toString() + "_" + sdf.format(curDate) + ".ec";
+        filePath = dirPath + "mmp_" + sdf.format(curDate) + ".ec";
 
         File f = new File(filePath);
         Log.d(TAG, filePath + " canRead=" + f.canRead() + " canWrite=" + f.canWrite());
@@ -63,10 +74,6 @@ public class CodeCoverageManager {
 
     public static void generateCoverageFile() {
         sInstance.writeToFile();
-    }
-
-    public static void uploadData() {
-        sInstance.upload();
     }
 
     private static int getVersion(Context context) {
@@ -87,14 +94,22 @@ public class CodeCoverageManager {
      * 生成executionData
      */
     private void writeToFile() {
+         if(System.currentTimeMillis() - lastGenTime < periodInterval){
+             return;
+         }
+        lastGenTime = System.currentTimeMillis();
 
-        if(filePath==null) return;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date curDate = new Date(System.currentTimeMillis());
+        String ecFilePath = dirPath + "mmp_" + sdf.format(curDate) + ".ec";
+
+        File f = new File(ecFilePath);
         OutputStream out = null;
         try {
-            out = new FileOutputStream(filePath, false);
+            out = new FileOutputStream(ecFilePath, false);
             IAgent agent = RT.getAgent();
             out.write(agent.getExecutionData(false));
-            Log.i(TAG, " generateCoverageFile write success path: "+filePath);
+            Log.i(TAG, " generateCoverageFile write success path: "+ecFilePath);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, " generateCoverageFile Exception:" + e.toString());
@@ -152,7 +167,8 @@ public class CodeCoverageManager {
                         .build();
 
                 Response response = client.newCall(new Request.Builder()
-                        .url(URL_HOST + "/WebServer/JacocoApi/uploadEcFile")
+//                        .url(URL_HOST + "/WebServer/JacocoApi/uploadEcFile")
+                        .url("")
                         .post(body)
                         .build()).execute();
                 if (response.isSuccessful()) {

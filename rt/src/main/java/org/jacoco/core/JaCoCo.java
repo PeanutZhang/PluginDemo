@@ -10,7 +10,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
-package com.zyh.simple.jacococore;
+package org.jacoco.core;
 
 /**
  * Static Meta information about JaCoCo.
@@ -28,7 +28,7 @@ public final class JaCoCo {
 
 //	static {
 //		final ResourceBundle bundle = ResourceBundle
-//				.getBundle("com.zyh.simple.jacococore.jacoco");
+//				.getBundle("org.jacoco.core.jacoco");
 //		VERSION = bundle.getString("VERSION");
 //		HOMEURL = bundle.getString("HOMEURL");
 //		RUNTIMEPACKAGE = bundle.getString("RUNTIMEPACKAGE");

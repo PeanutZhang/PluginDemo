@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-import com.zyh.simple.jacococore.runtime.RuntimeData;
+import org.jacoco.core.runtime.RuntimeData;
 
 /**
  * The API for classes instrumented in "offline" mode. The agent configuration

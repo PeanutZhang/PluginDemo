@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.data;
 
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.internal.data.CompactDataInput;
 
 import java.io.IOException;

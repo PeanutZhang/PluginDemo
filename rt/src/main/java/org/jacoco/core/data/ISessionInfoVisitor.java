@@ -10,7 +10,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
-package com.zyh.simple.jacococore.data;
+package org.jacoco.core.data;
 
 /**
  * Interface for data output of collected session information. This interface is

@@ -19,10 +19,10 @@ import java.util.Set;
 
 public class DiffAnalyzer {
     public static final int CURRENT = 0X10;
-    public static final int BRANCH = 0X11;
+    public static final int PRECOMMIT = 0X11;
 
     Set<MethodInfo> currentList = new HashSet<>();
-    Set<MethodInfo> branchList = new HashSet<>();
+    Set<MethodInfo> preCommitList = new HashSet<>();
 
     Set<MethodInfo> diffList = new HashSet<>();
 
@@ -48,15 +48,15 @@ public class DiffAnalyzer {
         if (type == CURRENT) {
             currentList.add(methodInfo);
         } else {
-            branchList.add(methodInfo);
+            preCommitList.add(methodInfo);
         }
     }
 
     public void diff() {
-        if (!currentList.isEmpty() && !branchList.isEmpty()) {
+        if (!currentList.isEmpty() && !preCommitList.isEmpty()) {
             for (MethodInfo cMethodInfo : currentList) {
                 boolean findInBranch = false;
-                for (MethodInfo bMethodInfo : branchList) {
+                for (MethodInfo bMethodInfo : preCommitList) {
                     if (cMethodInfo.className.equals(bMethodInfo.className)
                             && cMethodInfo.methodName.equals(bMethodInfo.methodName)
                             && cMethodInfo.desc.equals(bMethodInfo.desc)) {
@@ -91,7 +91,7 @@ public class DiffAnalyzer {
 
     public void reset() {
         currentList.clear();
-        branchList.clear();
+        preCommitList.clear();
         diffList.clear();
     }
 
@@ -119,7 +119,7 @@ public class DiffAnalyzer {
             if (classFile.isDirectory()) {
                 readClasses(classFile.getAbsolutePath(), type);
             } else {
-                if (classFile.getName().endsWith(".class")) {
+                if (classFile.getName().endsWith(".class") && !classFile.getName().endsWith("Binding.class") && !classFile.getName().contains("BuildConfig")) {
                     try {
                         doClass(classFile, type);
                     } catch (IOException e) {

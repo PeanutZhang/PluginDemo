@@ -12,8 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/codeCoverage" />
             <option value="$PROJECT_DIR$/jacoco-core" />
             <option value="$PROJECT_DIR$/rt" />
+            <option value="$PROJECT_DIR$/rt-no-op" />
             <option value="$PROJECT_DIR$/zyhsimple" />
           </set>
         </option>

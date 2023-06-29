@@ -84,4 +84,6 @@ include ':zyhsimple'
 ////    println "执行阶段，耗时： + ${curTime() - beginOfProjectExcute } "
 //}
 include ':rt'
+include ':rt-no-op'
 include ':jacoco-core'
+include ':codeCoverage'

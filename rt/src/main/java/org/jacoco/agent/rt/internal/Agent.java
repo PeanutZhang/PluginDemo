@@ -15,9 +15,9 @@ package org.jacoco.agent.rt.internal;
 import org.jacoco.agent.rt.IAgent;
 import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.NoneOutput;
-import com.zyh.simple.jacococore.JaCoCo;
-import com.zyh.simple.jacococore.data.ExecutionDataWriter;
-import com.zyh.simple.jacococore.runtime.RuntimeData;
+import org.jacoco.core.JaCoCo;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.runtime.RuntimeData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

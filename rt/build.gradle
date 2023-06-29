@@ -1,8 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.ttpai'
-
+if(!pubLocal.toBoolean()){
+    ext.GROUP="com.jf.andcoverage"
+    ext.POM_ARTIFACT_ID = "rt"
+    ext.VERSION_NAME = "1.6.0"
+    apply from: '../up_load.gradle'
+}
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.1"
@@ -24,3 +27,4 @@ dependencies {
 
 
 }
+
